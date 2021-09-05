@@ -1,0 +1,113 @@
+    - name: "{{ item.name }} Create public IP address"
+      azure_rm_publicipaddress:
+        resource_group: "{{ rg }}"
+        allocation_method: Static
+        name: "{{ item.name }}PubIP"
+      register: vmpubip
+      when: item.name != "db1"
+
+#    - name: "{{ item.name }} Display web server public ip"
+#      ansible.builtin.debug:
+#        msg: "http://{{ vmpubip['state']['ip_address'] }}"
+#      when: item.name == "web1"
+
+    - name: "{{ item.name }} Document web server public ip {{ vmpubip['state']['ip_address'] }}"
+      ansible.builtin.lineinfile:
+        path: "./{{ item.name }}ip"
+        create: yes
+        line: "http://{{ vmpubip['state']['ip_address'] }}"
+      when: item.name == "web1"
+
+    - name: "{{ item.name }} Create ansiblehost file for sofware installation playbook"
+      ansible.builtin.template:
+        src: ansiblehost.j2
+        dest: ansiblehost
+      when: item.name == "ans" 
+
+#    - name: "{{ item.name }} Create hostfile with ansible vm ip"
+#      ansible.builtin.lineinfile:
+#        path: ./ansiblehost
+#       create: yes
+#        line: "{{ aline }}"
+#      loop:
+#        -  "[ansiblehost]" 
+#        -  "{{ vmpubip['state']['ip_address'] }} ansible_user={{ admin }} ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
+#      loop_control:
+#        loop_var: aline
+#      when: item.name == "ans" 
+
+    - name: "{{ item.name }} Create Network Security Group that allows port {{ item.port }}"
+      azure_rm_securitygroup:
+        resource_group: "{{ rg }}"
+        name: "{{ item.name }}NSG"
+        rules:
+          - name: "{{ item.portname }}"
+            protocol: Tcp
+            destination_port_range: "{{ item.port }}"
+            access: Allow
+            priority: 1001
+            direction: Inbound
+      when: item.name != "db1"
+
+    - name: "{{ item.name }} Create Network Security Group without SSH or HTTP access"
+      azure_rm_securitygroup:
+        resource_group: "{{ rg }}"
+        name: "{{ item.name }}NSG"
+      when: item.name == "db1"
+
+    - name: "{{ item.name }} Create vNIC with public IP"
+      azure_rm_networkinterface:
+        resource_group: "{{ rg }}"
+        name: "{{ item.name }}NIC"
+        virtual_network: "{{ vnet }}"
+        subnet: "{{ subnet }}"
+        security_group: "{{ item.name }}NSG"
+        ip_configurations:
+          - name: ipconfig1
+            public_ip_address_name: "{{ item.name }}PubIP"
+            primary: True
+      when: item.name != "db1"
+
+    - name: "{{ item.name }} Create vNIC without public IP"
+      azure_rm_networkinterface:
+        resource_group: "{{ rg }}"
+        name: "{{ item.name }}NIC"
+        virtual_network: "{{ vnet }}"
+        subnet: "{{ subnet }}"
+        security_group: "{{ item.name }}NSG"
+        ip_configurations:
+          - name: ipconfig1
+            primary: True
+      when: item.name == "db1"
+
+    - name: "{{ item.name }} Get contents of ~/.ssh/id_rsa.pub into variable"
+      ansible.builtin.shell: cat ~/.ssh/id_rsa.pub
+      register: sshkey
+      ignore_errors: true
+
+    - name: "{{ item.name }} Create VM"
+      azure_rm_virtualmachine:
+        resource_group: "{{ rg }}"
+        name: "{{ item.name }}"
+        vm_size: Standard_DS1_v2
+        admin_username: "{{ admin }}"
+        ssh_password_enabled: false
+        ssh_public_keys:
+          - path: /home/{{ admin }}/.ssh/authorized_keys
+            key_data: "{{ sshkey.stdout }}"
+        network_interfaces:  "{{ item.name }}NIC"
+        image:
+          offer: CentOS
+          publisher: OpenLogic
+          sku: '8_4'
+          version: latest
+      register: vmkres
+
+    - name: "{{ item.name }} Add ssh key update command to bash file to run on exiting servers"
+      ansible.builtin.lineinfile:
+        path: ./sshkeyupdate.sh
+        create: yes
+        line: 'az vm user update -u {{ admin }} --ssh-key-value "$(< ~/.ssh/id_rsa.pub)" -n {{ item.name }} -g {{ rg }}'
+        mode: 0770
+      when: "vmkres.changed == 0 and item.name != 'ans'"
+

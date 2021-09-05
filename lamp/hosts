@@ -1,0 +1,7 @@
+[webservers]
+web1 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+[dbservers]
+db1 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+

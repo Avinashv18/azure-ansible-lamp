@@ -1,0 +1,32 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - ./vars.yml
+
+  tasks:
+
+    - name: Remove a VM and all resources that were autocreated
+      azure_rm_virtualmachine:
+        resource_group: "{{ rg }}"
+        name: ans
+        remove_on_absent: all_autocreated
+        state: absent
+
+    - name: Delete network interface
+      azure_rm_networkinterface:
+        resource_group: "{{ rg }}"
+        name: ansNIC
+        state: absent
+
+    - name: Delete network security group
+      azure_rm_securitygroup:
+        resource_group: "{{ rg }}"
+        name: ansNSG
+        state: absent
+
+    - name: Delete public ip
+      azure_rm_publicipaddress:
+        resource_group: "{{ rg }}"
+        name: ansPubIP
+        state: absent

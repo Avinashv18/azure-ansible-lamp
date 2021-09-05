@@ -1,0 +1,5 @@
+site: bcclamp
+rg:  "{{ site }}RG"
+vnet: "{{ site }}VNET"
+subnet: "{{ site }}SUBNET"
+admin: lampadmin

@@ -1,0 +1,14 @@
+---
+# Handler to handle DB tier notifications
+
+- name: restart mariadb
+  become: yes
+  service:
+    name: mariadb
+    state: restarted
+
+#- name: restart firewalld
+#  become: yes
+#  service:
+#    name: firewalld
+#    state: restarted

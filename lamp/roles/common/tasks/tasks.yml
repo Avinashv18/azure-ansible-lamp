@@ -1,0 +1,40 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Install chrony
+  dnf:
+    name: chrony
+    state: present
+  tags: chrony
+
+- name: Configure chrony file
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+  tags: chrony
+  notify: restart chronyd
+
+- name: Start the chronyd service
+  service:
+    name: chronyd
+    state: started
+    enabled: yes
+  tags: chronyd
+
+- name: test to see if selinux is running
+  command: getenforce
+  register: sestatus
+  changed_when: false
+
+#- name: Display selinux status
+#  ansible.builtin.debug:
+#    msg: "{{ sestatus }}"
+
+#- name: Get firewall status
+#  command: firewall-cmd --list-all
+#  register: fwstate
+#  changed_when: false
+
+#- name: Display firewall statu
+#  ansible.builtin.debug:
+#    msg: "{{ fwstate }}"

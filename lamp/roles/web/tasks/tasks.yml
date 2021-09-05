@@ -1,0 +1,52 @@
+---
+# These tasks install http and the php modules.
+
+- name: Upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install httpd httpd-tools
+  yum:
+    name: ['httpd', 'httpd-tools']
+    update_cache: yes
+
+#- name: permit traffic in default zone for http service
+#  ansible.posix.firewalld:
+#    service: http
+#    permanent: yes
+#    state: enabled
+#  notify: restart firewalld
+
+- name: Install php modules
+  yum:
+    name: ['php', 'php-fpm', 'php-mysqlnd', 'php-opcache', 'php-gd', 'php-xml', 'php-mbstring']
+    update_cache: yes
+
+- name: php service state
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes
+  notify: Restart apache
+
+- name: http service state
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Configure SELinux to allow httpd to connect to remote database
+  seboolean:
+    name: httpd_can_network_connect_db
+    state: true
+    persistent: yes
+
+- name: Creates the index.php file
+  ansible.builtin.template:
+    src: index.php.j2
+    dest: /var/www/html/index.php
+
+- name: Removes all entries from authorized_keys
+  become: no
+  ansible.builtin.shell: :> ~/.ssh/authorized_keys

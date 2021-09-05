@@ -1,0 +1,38 @@
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+   - ./vars.yml
+
+  tasks:
+
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: "{{ rg }}"
+        location: eastus
+
+    - name: Create virtual network
+      azure_rm_virtualnetwork:
+        resource_group: "{{ rg }}"
+        name: "{{ vnet }}"
+        address_prefixes: "10.0.0.0/16"
+
+    - name: Add subnet
+      azure_rm_subnet:
+        resource_group: "{{ rg }}"
+        name: "{{ subnet }}"
+        address_prefix: "10.0.1.0/24"
+        virtual_network: "{{ vnet }}"
+
+    - name: Create lamp site.yml file
+      ansible.builtin.template:
+        src: site.yml.j2
+        dest: ../lamp/site.yml
+
+    - include_tasks: mkvm.yml
+      loop:
+        - { name: "ans", port: "22", portname: "SSH" }
+        - { name: "web1", port: "80", portname: "HTTP" }
+        - { name: "db1", port: "", portname: "" }
+

@@ -1,0 +1,53 @@
+ 
+- name: Upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install Mysql package, python3-PyMySQL
+  yum:
+    name: ['mariadb-server','mariadb', 'python3-PyMySQL']
+    state: installed
+
+- name: Configure SELinux to start mysql on any port
+  seboolean:
+    name: mysql_connect_any
+    state: true
+    persistent: yes
+
+- name: Create Mysql configuration file
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+  notify: restart mariadb
+
+- name: Start Mysql Service
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+
+#- name: permit traffic in default zone for mariadb service
+#  ansible.posix.firewalld:
+#    port: "{{ mysql_port + '/' +  mysql_prot }}"
+#    permanent: yes
+#    state: enabled
+#  notify: restart firewalld
+
+- name: Create Application Database
+  mysql_db:
+    name: "{{ dbname }}"
+    state: present
+
+- name: Create Application DB User
+  no_log: true
+  mysql_user:
+    name: "{{ dbuser }}"
+    password: "{{ upassword }}"
+    priv: "*.*:ALL"
+    host: '%'
+    state: present
+
+- name: Remove all entries from authorized_keys
+  become: no
+  ansible.builtin.shell: :> ~/.ssh/authorized_keys
