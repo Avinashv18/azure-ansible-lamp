@@ -83,7 +83,7 @@ steps:
     ssh -tt -oStrictHostKeyChecking=accept-new $(cat ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
     ansible-playbook -i hosts rmansvm.yml
     curl $(cat web1ip)
-  displayName: 'Test ssh'
+  displayName: 'Run lamp playbook on azure web and db servers, delete temp ansible vm'
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)
