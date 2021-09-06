@@ -44,11 +44,12 @@ steps:
 
 - script: |
     cat /dev/zero | ssh-keygen -q -N ""
-    cd azenv
+    echo ""
+    #cd azenv
     cat ~/.ssh/id_rsa.pub
     pwd
-    ansible-playbook -i hosts main.yml
-    ansible-playbook -i ansiblehost deploysw.yml
+    ansible-playbook -i azenv/hosts azenv/main.yml
+    ansible-playbook -i azenv/ansiblehost azenv/deploysw.yml
   displayName: 'Run infrastructure deployment and ansible intallation playbooks'
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
@@ -66,7 +67,7 @@ steps:
 - script: |
     pwd
     ssh -tt -oStrictHostKeyChecking=accept-new $(cat ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
-    ansible-playbook -i hosts rmansvm.yml
+    ansible-playbook -i azenv/hosts azenv/rmansvm.yml
     curl $(cat web1ip)
   displayName: 'Run lamp playbook on azure web and db servers, delete temp ansible vm'
   env:
