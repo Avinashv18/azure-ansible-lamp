@@ -6,12 +6,12 @@
       register: vmpubip
       when: item.name != "db1"
 
-#    - name: "{{ item.name }} Display web server public ip"
-#      ansible.builtin.debug:
-#        msg: "http://{{ vmpubip['state']['ip_address'] }}"
-#      when: item.name == "web1"
+    - name: "{{ item.name }} Display web server public ip"
+      ansible.builtin.debug:
+        msg: "http://{{ vmpubip['state']['ip_address'] }}"
+      when: item.name == "web1"
 
-    - name: "{{ item.name }} Document web server public ip {{ vmpubip['state']['ip_address'] }}"
+    - name: Document web server public ip
       ansible.builtin.lineinfile:
         path: "./{{ item.name }}ip"
         create: yes
