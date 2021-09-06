@@ -19,7 +19,7 @@ steps:
   displayName: 'Get system info'
 
 - task: AzureCLI@2
-  displayName: Azure CLI
+  displayName: Get azure account details for ansible
   inputs:
     azureSubscription: 'AzureServiceConnection'
     addSpnToEnvironment: true
@@ -38,9 +38,6 @@ steps:
     pip install "ansible==2.9.17"
     pip install ansible[azure]
   displayName: 'Install Ansible'
-
-- script: ansible --version
-  displayName: 'Display Ansible version'
 
 - script: |
     cat /dev/zero | ssh-keygen -q -N ""
