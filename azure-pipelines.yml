@@ -48,29 +48,13 @@ steps:
     pwd
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
-    #python3 enterpubkey.py
-    #ansible-playbook -i lamp_simple/hosts sitewkey.yml
-    #ls -al
-    #ls -al $HOME
-    #cat ~/.ssh/id_rsa.pub
-    #cat sitewkey.yml
-  displayName: 'Run Ansible playbook'
+  displayName: 'Run infrastructure depl0ment and ansible intallation playbooks'
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)
     AZURE_TENANT: $(ARM_TENANT_ID)
     AZURE_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-#- task: AzureCLI@2
-#  displayName: Azure CLI Get AnsibleVM public IP
-#  inputs:
-#    azureSubscription: 'AzureServiceConnection'
-#    addSpnToEnvironment: true
-#    scriptType: 'bash'
-#    scriptLocation: 'inlineScript'
-#    inlineScript: |
-#      echo "##vso[task.setvariable variable=ANSIBLEVM]$(az network public-ip show -g AnsibleDevRG -n AnsibleDevPublicIP --query="ipAddress" -o tsv)"
-#      echo $ANSIBLEVM
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'AzureServiceConnection'
@@ -79,12 +63,6 @@ steps:
     scriptPath: './azenv/sshkeyupdate.sh'
 
 - script: |
-#    echo $ANSIBLEVM
-#    echo "Waiting a minute for sshd to be ready"
-#    date
-#    sleep 1m
-#    date
-#    echo "Done wating"
     pwd
     ssh -tt -oStrictHostKeyChecking=accept-new $(cat ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
     ansible-playbook -i hosts rmansvm.yml
