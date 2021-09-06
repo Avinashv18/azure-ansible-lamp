@@ -39,13 +39,17 @@ steps:
     pip install ansible[azure]
   displayName: 'Install Ansible'
 
+- script: ansible --version
+  displayName: 'Display Ansible version'
+
 - script: |
     cat /dev/zero | ssh-keygen -q -N ""
     cd azenv
+    cat ~/.ssh/id_rsa.pub
     pwd
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
-  displayName: 'Run infrastructure depl0ment and ansible intallation playbooks'
+  displayName: 'Run infrastructure deployment and ansible intallation playbooks'
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)

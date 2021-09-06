@@ -30,6 +30,13 @@
         src: site.yml.j2
         dest: ../lamp/site.yml
 
+    - name: "Start sshkeyupdate.sh file"
+      ansible.builtin.lineinfile:
+        path: ./sshkeyupdate.sh
+        create: yes
+        line: "#!/bin/bash"
+        mode: 0770
+
     - include_tasks: mkvm.yml
       loop:
         - { name: "ans", port: "22", portname: "SSH" }
