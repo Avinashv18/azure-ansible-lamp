@@ -42,7 +42,7 @@ steps:
     AZURE_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
 - task: AzureCLI@2
-  displayName: Update ssh key on web and db servers
+  displayName: Update ssh key on web and db servers 
   inputs:
     azureSubscription: 'AzureServiceConnection'
     scriptType: 'bash'
