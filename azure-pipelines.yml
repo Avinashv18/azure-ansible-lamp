@@ -9,15 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: |
-    pwd
-    echo $HOME
-    uname -a
-    whoami
-    ls -al
-  displayName: 'Get system info'
-
 - task: AzureCLI@2
   displayName: Get azure account details for ansible
   inputs:
@@ -31,22 +22,14 @@ steps:
       echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET]${servicePrincipalKey}"
       echo "##vso[task.setvariable variable=ARM_TENANT_ID]${tenantId}"
 
-- script: printenv | grep ARM_
-  displayName: 'Get ARM environment variables'
-
 - script: |
     pip install "ansible==2.9.17"
     pip install ansible[azure]
   displayName: 'Install Ansible'
 
-- script: ansible --version
-  displayName: 'Display Ansible version'
-
 - script: |
     cat /dev/zero | ssh-keygen -q -N ""
-    echo ""
     cd azenv
-    pwd
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
   displayName: 'Run infrastructure deployment and ansible installation playbooks'
@@ -65,12 +48,8 @@ steps:
     scriptPath: './azenv/sshkeyupdate.sh'
 
 - script: |
-    pwd
-    cd azenv
-    ssh -tt -oStrictHostKeyChecking=accept-new $(cat ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
+    ssh -tt -oStrictHostKeyChecking=accept-new $(cat azenv/ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat azenv/ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
     ansible-playbook -i hosts rmansvm.yml
-    cat web1ip
-    curl $(cat web1ip)
   displayName: Run lamp playbook, delete temp ansible vm
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
