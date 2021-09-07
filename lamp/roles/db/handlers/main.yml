@@ -1,3 +1,4 @@
+---
 - name: restart mariadb
   become: yes
   service:

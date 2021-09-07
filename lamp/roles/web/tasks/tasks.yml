@@ -1,3 +1,4 @@
+---
 - name: Upgrade all packages
   yum:
     name: '*'

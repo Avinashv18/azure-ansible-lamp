@@ -1,3 +1,4 @@
+---
 - name: Install chrony
   dnf:
     name: chrony
