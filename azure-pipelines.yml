@@ -9,6 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+steps:
+
 - task: AzureCLI@2
   displayName: Get azure account details for ansible
   inputs:
