@@ -49,7 +49,7 @@ steps:
     pwd
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
-  displayName: 'Run infrastructure deployment and ansible intallation playbooks'
+  displayName: 'Run infrastructure deployment and ansible installation playbooks'
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)
@@ -71,9 +71,14 @@ steps:
     ansible-playbook -i hosts rmansvm.yml
     cat web1ip
     curl $(cat web1ip)
-  displayName: 'Run lamp playbook, delete temp ansible vm '
+  displayName: Run lamp playbook, delete temp ansible vm
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)
     AZURE_TENANT: $(ARM_TENANT_ID)
     AZURE_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+
+- script: |
+    cat azenv/web1ip
+    curl $(cat azenv/web1ip)
+  displayName: Access lamp website
