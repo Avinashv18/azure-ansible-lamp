@@ -46,7 +46,6 @@ steps:
     cat /dev/zero | ssh-keygen -q -N ""
     echo ""
     cd azenv
-    #cat ~/.ssh/id_rsa.pub
     pwd
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
@@ -58,6 +57,7 @@ steps:
     AZURE_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
 - task: AzureCLI@2
+  displayName: Update ssh key on web and db servers
   inputs:
     azureSubscription: 'AzureServiceConnection'
     scriptType: 'bash'

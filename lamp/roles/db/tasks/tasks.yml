@@ -1,5 +1,4 @@
- 
-- name: Upgrade all packages
+ - name: Upgrade all packages
   yum:
     name: '*'
     state: latest
@@ -26,13 +25,6 @@
     name: mariadb
     state: started
     enabled: yes
-
-#- name: permit traffic in default zone for mariadb service
-#  ansible.posix.firewalld:
-#    port: "{{ mysql_port + '/' +  mysql_prot }}"
-#    permanent: yes
-#    state: enabled
-#  notify: restart firewalld
 
 - name: Create Application Database
   mysql_db:

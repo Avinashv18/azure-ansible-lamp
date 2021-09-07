@@ -1,6 +1,3 @@
----
-# These tasks install http and the php modules.
-
 - name: Upgrade all packages
   yum:
     name: '*'
@@ -10,13 +7,6 @@
   yum:
     name: ['httpd', 'httpd-tools']
     update_cache: yes
-
-#- name: permit traffic in default zone for http service
-#  ansible.posix.firewalld:
-#    service: http
-#    permanent: yes
-#    state: enabled
-#  notify: restart firewalld
 
 - name: Install php modules
   yum:

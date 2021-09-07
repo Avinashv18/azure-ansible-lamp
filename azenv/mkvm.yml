@@ -11,7 +11,7 @@
         msg: "http://{{ vmpubip['state']['ip_address'] }}"
       when: item.name == "web1"
 
-    - name: Document web server public ip
+    - name: "{{ item.name }} Document web server public ip"
       ansible.builtin.lineinfile:
         path: "./{{ item.name }}ip"
         create: yes
@@ -23,18 +23,6 @@
         src: ansiblehost.j2
         dest: ansiblehost
       when: item.name == "ans" 
-
-#    - name: "{{ item.name }} Create hostfile with ansible vm ip"
-#      ansible.builtin.lineinfile:
-#        path: ./ansiblehost
-#       create: yes
-#        line: "{{ aline }}"
-#      loop:
-#        -  "[ansiblehost]" 
-#        -  "{{ vmpubip['state']['ip_address'] }} ansible_user={{ admin }} ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
-#      loop_control:
-#        loop_var: aline
-#      when: item.name == "ans" 
 
     - name: "{{ item.name }} Create Network Security Group that allows port {{ item.port }}"
       azure_rm_securitygroup:
