@@ -34,7 +34,7 @@ steps:
     cd azenv
     ansible-playbook -i hosts main.yml
     ansible-playbook -i ansiblehost deploysw.yml
-  displayName: 'Run infrastructure deployment and ansible installation playbooks'
+  displayName: 'Run infrastructure deployment and ansible installation playbooks '
   env:
     AZURE_CLIENT_ID: $(ARM_CLIENT_ID)
     AZURE_SECRET: $(ARM_CLIENT_SECRET)
