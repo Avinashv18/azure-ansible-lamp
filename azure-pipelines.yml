@@ -50,7 +50,8 @@ steps:
     scriptPath: './azenv/sshkeyupdate.sh'
 
 - script: |
-    ssh -tt -oStrictHostKeyChecking=accept-new $(cat azenv/ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat azenv/ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
+    cd azenv
+    ssh -tt -oStrictHostKeyChecking=accept-new $(cat ansiblehost | grep "\." | cut -d' ' -f 2 | cut -d'=' -f 2)@$(cat ansiblehost | grep "\." | cut -d' ' -f 1) "cd lamp && ansible-playbook -i hosts site.yml"
     ansible-playbook -i hosts rmansvm.yml
   displayName: Run lamp playbook, delete temp ansible vm
   env:
