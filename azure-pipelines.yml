@@ -63,4 +63,4 @@ steps:
 - script: |
     cat azenv/web1ip
     curl $(cat azenv/web1ip)
-  displayName: Access lamp website
+  displayName: Access lamp website 
