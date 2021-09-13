@@ -9,7 +9,7 @@
     - name: Create a resource group
       azure_rm_resourcegroup:
         name: "{{ rg }}"
-        location: eastus
+        location: westus
 
     - name: Create virtual network
       azure_rm_virtualnetwork:
