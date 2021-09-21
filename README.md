@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/doncanton/Ansible%20LAMP/_apis/build/status/Better-Computing-Consulting.azure-devops-ci-ansible-lamp-deployment?branchName=master)](https://dev.azure.com/doncanton/Ansible%20LAMP/_build/latest?definitionId=44&branchName=master)
 # azure-devops-ci-ansible-lamp-deployment
 Automatic deployment of cloud infrastructure and LAMP application stack using Ansible and Azure DevOps CI
 
