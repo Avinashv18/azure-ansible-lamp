@@ -18,7 +18,7 @@
         line: "http://{{ vmpubip['state']['ip_address'] }}"
       when: item.name == "web1"
 
-    - name: "{{ item.name }} Create ansiblehost file for sofware installation playbook"
+    - name: "{{ item.name }} Create ansiblehost file for software installation playbook"
       ansible.builtin.template:
         src: ansiblehost.j2
         dest: ansiblehost
