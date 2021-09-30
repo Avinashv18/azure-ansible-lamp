@@ -33,15 +33,6 @@
         name: epel-release
         update_cache: yes
 
-#    - name: install sshpass and update dnf cache 
-#      dnf:
-#        name: sshpass
-#        update_cache: yes
-
- #   - name: Install posix collection
- #     become: no
- #     ansible.builtin.command: ansible-galaxy collection install ansible.posix
-
     - name: Copy lamp folder
       become: no
       ansible.builtin.copy:
