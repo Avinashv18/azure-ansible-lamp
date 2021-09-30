@@ -1,2 +1,2 @@
 [ansiblehost]
-{{ vmpubip['state']['ip_address'] }} ansible_user=lampadmin ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+{{ vmpubip['state']['ip_address'] }} ansible_user={{ admin }} ansible_ssh_common_args='-o StrictHostKeyChecking=no'
