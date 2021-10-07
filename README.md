@@ -21,13 +21,15 @@ During the execution of the playbooks you can follow the changes on Azure with C
 * az network nsg rule list
 * az network public-ip list
 
-
 After initial deployment you can further customize the infrastructure or the LAMP stack by commiting your changes to the code.
 
-Please see blog:
+There is a blog that explains with details some aspects of the playblooks, such as how ssh key authentication is handled and how the LAMP playbooks are executed from within the new Azure infrastructure.
 
 https://bcc.bz/post/azure-devops-ci-ansible-lamp-deployment 
 
-For detailed descriptions of its ssh key authentication and remote deployment features.
+There is also a video that shows the execution of the entire process and deploying an update by re-triggering the pipeline.
+
+https://youtu.be/Vlt3Zgk8jKQ
+
 
 :smiley:
