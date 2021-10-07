@@ -24,4 +24,10 @@ During the execution of the playbooks you can follow the changes on Azure with C
 
 After initial deployment you can further customize the infrastructure or the LAMP stack by commiting your changes to the code.
 
+Please see blog:
+
+https://bcc.bz/post/azure-devops-ci-ansible-lamp-deployment 
+
+For a detailed descriptions its ssh key authentication and remote deployment features.
+
 :smiley:
