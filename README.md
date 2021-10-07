@@ -28,6 +28,6 @@ Please see blog:
 
 https://bcc.bz/post/azure-devops-ci-ansible-lamp-deployment 
 
-For a detailed descriptions its ssh key authentication and remote deployment features.
+For detailed descriptions its ssh key authentication and remote deployment features.
 
 :smiley:
